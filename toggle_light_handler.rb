@@ -2,6 +2,11 @@ require 'faraday'
 require 'dotenv/load'
 require 'aws-record'
 
+class LightPowerStatus
+  string_attr :id, hash_key: true
+  string_attr :power
+end
+
 def request
   client = Faraday.new url: ENV['BASE_URL']
   client.headers['Authorization'] = "Bearer #{ENV['TOKEN']}"
