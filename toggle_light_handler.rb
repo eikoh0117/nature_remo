@@ -1,5 +1,6 @@
 require 'faraday'
 require 'dotenv/load'
+require 'aws-record'
 
 def request
   client = Faraday.new url: ENV['BASE_URL']
