@@ -5,6 +5,7 @@ require 'aws-record'
 class NatureRemoRecords
   include Aws::Record
   string_attr :role, hash_key: true
+  string_attr :power
 end
 
 def request
@@ -20,13 +21,10 @@ end
 def turn_on
   response = request()
   response_body = JSON.parse(response.body)
-  last_button = response_body.last_button
-  if last_button === "next"
-    role = "toggle_light"
-    item = find_item(role)
-    item.power = "on"
-    item.save
-  end
+  role = "toggle_light"
+  item = find_item(role)
+  item.power = "on"
+  item.save
 rescue => e
   p e
 end
@@ -46,12 +44,14 @@ end
 
 def find_item(role)
   item = NatureRemoRecords.find(role: role)
+  p "aa"
+  return p item
   item
 rescue => e
   p e
 end
 
-def lambda_handler
+def lambda_handler(event:, context:)
   role = "toggle_light"
   item = find_item(role)
   if item.power === "on"
@@ -62,5 +62,3 @@ def lambda_handler
 rescue => e
   p e
 end
-
-lambda_handler()
