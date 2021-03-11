@@ -2,9 +2,9 @@ require 'faraday'
 require 'dotenv/load'
 require 'aws-record'
 
-class LightPowerStatus
-  string_attr :id, hash_key: true
-  string_attr :power
+class NatureRemoRecords
+  include Aws::Record
+  string_attr :role, hash_key: true
 end
 
 def request
@@ -18,15 +18,49 @@ def request
 end
 
 def turn_on
-  1.times { request() }
+  response = request()
+  response_body = JSON.parse(response.body)
+  last_button = response_body.last_button
+  if last_button === "next"
+    role = "toggle_light"
+    item = find_item(role)
+    item.power = "on"
+    item.save
+  end
+rescue => e
+  p e
 end
 
 def turn_off
-  2.times { request() }
+  2.times do
+    response = request()
+    response_body = JSON.parse(response.body)
+  end
+  role = "toggle_light"
+  item = find_item(role)
+  item.power = "off"
+  item.save
+rescue => e
+  p e
+end
+
+def find_item(role)
+  item = NatureRemoRecords.find(role: role)
+  item
+rescue => e
+  p e
 end
 
 def lambda_handler
-  turn_on()
+  role = "toggle_light"
+  item = find_item(role)
+  if item.power === "on"
+    turn_off()
+  else
+    turn_on()
+  end
+rescue => e
+  p e
 end
 
 lambda_handler()
