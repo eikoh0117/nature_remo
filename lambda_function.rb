@@ -44,8 +44,6 @@ end
 
 def find_item(role)
   item = NatureRemoRecords.find(role: role)
-  p "aa"
-  return p item
   item
 rescue => e
   p e
