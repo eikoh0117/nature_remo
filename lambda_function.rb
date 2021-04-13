@@ -29,11 +29,9 @@ end
 
 def turn_off
   2.times do
-    response = request()
-    response_body = JSON.parse(response.body)
+    request()
   end
-  role = "toggle_light"
-  item = find_item(role)
+  item = find_item("toggle_light")
   item.power = "off"
   item.save
 end
@@ -43,8 +41,7 @@ def find_item(role)
 end
 
 def lambda_handler(event:, context:)
-  role = "toggle_light"
-  item = find_item(role)
+  item = find_item("toggle_light")
   if item.power === "on"
     turn_off()
   else
