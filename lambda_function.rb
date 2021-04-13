@@ -25,8 +25,6 @@ def turn_on
   item = find_item(role)
   item.power = "on"
   item.save
-rescue => e
-  p e
 end
 
 def turn_off
@@ -38,15 +36,10 @@ def turn_off
   item = find_item(role)
   item.power = "off"
   item.save
-rescue => e
-  p e
 end
 
 def find_item(role)
-  item = NatureRemoRecords.find(role: role)
-  item
-rescue => e
-  p e
+  NatureRemoRecords.find(role: role)
 end
 
 def lambda_handler(event:, context:)
@@ -57,6 +50,4 @@ def lambda_handler(event:, context:)
   else
     turn_on()
   end
-rescue => e
-  p e
 end
